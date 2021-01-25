@@ -9,9 +9,9 @@ npm i
 ```
 
 ## Configuration
-There's a file called `config.json.example`. Rename it `config.json` and add your discord Bot Token. To learn how to do this follow [these instructions](https://www.digitalocean.com/community/tutorials/how-to-build-a-discord-bot-with-node-js).
+There's a file called `.env.example`. Copy it to `.env` and add your discord Bot Token and Guild ID. To learn how to do this follow [these instructions](https://www.digitalocean.com/community/tutorials/how-to-build-a-discord-bot-with-node-js).
 ```sh
-cp config.json.example config.json
+cp .env.example .env
 ```
 You may want to delete the contents of `invites.json` which is used to store the invite codes. It is currently filled with invite codes for the [Cosmos Network discord](https://discord.gg/vcExX9T).
 ```sh

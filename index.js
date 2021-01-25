@@ -1,9 +1,16 @@
+require('dotenv').config();
+
+const prefix = process.env.PREFIX || "~";
+const guildID = process.env.GUILD_ID;
+const token = process.env.BOT_TOKEN;
+
+if (!guildID || !token) {
+  throw new Error(`Must provide process.env.GUILD_ID and process.env.BOT_TOKEN`);
+}
+
 const Discord = require("discord.js");
-const config = require("./config.json");
 const fs = require('fs');
-const { allowedNodeEnvironmentFlags } = require("process");
-// const guildID = '802256309302460486' // test server
-const guildID = '669268347736686612' // cosmos server
+
 const client = new Discord.Client();
 // Initialize the invite cache
 const invites = {};
@@ -25,10 +32,10 @@ client.on('ready', async () => {
 client.on('guildMemberAdd', member => {
   // To compare, we need to load the current invite list.
   member.guild.fetchInvites().then(guildInvites => {
-    
+
     // This is the *existing* invites for the guild.
     const ei = invites[member.guild.id];
-    
+
     invites[member.guild.id] = guildInvites;
     // Look through the invites, find the one for which the uses went up.
     const invite = guildInvites.find(i => ei.get(i.code).uses < i.uses);
@@ -38,10 +45,10 @@ client.on('guildMemberAdd', member => {
   });
 });
 
-const prefix = "~";
-client.on("message", function(message) { 
+client.on("message", function(message) {
   if (message.author.bot) return;
   if (!message.content.startsWith(prefix)) return;
+
   const guild = client.guilds.cache.get(guildID) // get the guild object
   const member = guild.member(message.author) // convert the User object to a GuildMember!
   if (!member.hasPermission("ADMINISTRATOR")) return;
@@ -61,15 +68,14 @@ client.on("message", function(message) {
     case('list'):
       list(message)
       break;
+    case('ping'):
+      const timeTaken = Date.now() - message.createdTimestamp;
+      message.reply(`Pong! This message had a latency of ${timeTaken}ms.`);
+      break;
     default:
       message.reply(`command doesn't exist`)
   }
-
-  if (command === "ping") {
-    const timeTaken = Date.now() - message.createdTimestamp;
-    message.reply(`Pong! This message had a latency of ${timeTaken}ms.`);              
-  }   
-});    
+});
 
 function addRole(member, invite) {
   let rawdata = fs.readFileSync('invites.json');
