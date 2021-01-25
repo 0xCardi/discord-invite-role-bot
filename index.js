@@ -128,4 +128,4 @@ function add(message, args) {
   message.reply(`role @${role.name} added to invite link \`${base + inviteCode}\``)
 }
 
-client.login(config.BOT_TOKEN);
+client.login(token);
